@@ -1,15 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Load Locale Model
-const Locale = require("../../models/Locale");
+import Locale from "../../models/Locale.js";
 
 /*
  * @route   GET api/locale/test
  * @desc    Tests locale route
  * @access  Public
  */
-router.get("/test", (req, res) => res.json({ success: "Locale route works" }));
+router.get("/test", (req, res) =>
+  res.json({ success: true, message: "Locale route works" })
+);
 
 /*
  * @route   GET api/locale
@@ -129,4 +131,4 @@ router.delete("/:locale_id", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

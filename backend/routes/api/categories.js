@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Load Category Model
-const Category = require("../../models/Category");
+import Category from "../../models/Category.js";
 
 /*
  * @route   GET api/categories/test
@@ -10,7 +10,7 @@ const Category = require("../../models/Category");
  * @access  Public
  */
 router.get("/test", (req, res) =>
-  res.json({ success: "Category route works" })
+  res.json({ success: true, message: "Category route works" })
 );
 
 /*
@@ -140,4 +140,4 @@ router.delete("/:category_id", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

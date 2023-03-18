@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Basebone Technical Assessment backend microservice",
   "main": "dev-server.js",
+  "type": "module",
   "scripts": {
     "start": "node dev-server.js",
-    "dev": "nodemon dev-server.js"
+    "dev": "nodemon dev-server.js",
+    "lint": "eslint --ignore-path ../.gitignore .",
+    "lint-fix": "eslint --ignore-path ../.gitignore . --fix"
   },
   "author": "Thabang Zwane <tmzwane1@gmail.com>",
   "license": "ISC",
@@ -17,6 +20,11 @@
     "mongoose": "^7.0.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.21.3",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.36.0",
+    "eslint-config-strongloop": "^2.1.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.21"
   }
 }

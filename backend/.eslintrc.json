@@ -1,0 +1,44 @@
+{
+  "parser": "@babel/eslint-parser",
+  "extends": "strongloop",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": 2021
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "rules": {
+    "max-len": [
+      1,
+      120,
+      4,
+      {
+        "ignoreUrls": true,
+        "ignoreTrailingComments": true,
+        "ignoreStrings": true
+      }
+    ],
+    "quotes": ["off", "double", { "avoidEscape": false }],
+    "ignoreStrings": 0,
+    "semi": ["error", "always"],
+    "new-cap": [
+      "error",
+      {
+        "newIsCap": false,
+        "capIsNew": false
+      }
+    ],
+    "comma-dangle": "off",
+    "indent": ["warn", 2],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+      }
+    ]
+  }
+}

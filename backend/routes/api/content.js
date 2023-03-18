@@ -1,15 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Load Content Model
-const Content = require("../../models/Content");
+import Content from "../../models/Content.js";
 
 /*
  * @route   GET api/content/test
  * @desc    Tests content route
  * @access  Public
  */
-router.get("/test", (req, res) => res.json({ success: "Content route works" }));
+router.get("/test", (req, res) =>
+  res.json({ success: true, message: "Content route works" })
+);
 
 /*
  * @route   GET api/content
@@ -125,4 +127,4 @@ router.delete("/:content_id", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

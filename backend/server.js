@@ -1,27 +1,35 @@
-const path = require("path");
-const express = require("express");
-const mongoose = require("mongoose");
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import mongoose from "mongoose";
 
-//API Routes
-const items = require(path.join(__dirname, "routes", "api", "items"));
-const categories = require(path.join(__dirname, "routes", "api", "categories"));
-const locale = require(path.join(__dirname, "routes", "api", "locale"));
-const content = require(path.join(__dirname, "routes", "api", "content"));
-const media = require(path.join(__dirname, "routes", "api", "media"));
+// Load config
+import { mongoURI } from "./utils/config.js";
+
+// API Routes
+import items from "./routes/api/items.js";
+import categories from "./routes/api/categories.js";
+import locale from "./routes/api/locale.js";
+import content from "./routes/api/content.js";
+import media from "./routes/api/media.js";
 
 const server = express();
+
+server.use(cors());
+server.use(morgan("dev"));
 
 // Body Parsing
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
 
 // Connect to MongoDB
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-mongoose.set("useUnifiedTopology", true);
+const dbConfig = {
+  autoIndex: false,
+  useNewUrlParser: true,
+};
+
 mongoose
-  .connect(mongoUrl)
+  .connect(mongoURI, dbConfig)
   .then(() => console.log("MongoDB Connected"))
   .catch((errorDetails) =>
     console.error(`Error connecting to MongoDB: ${errorDetails}`)
@@ -35,9 +43,11 @@ server.use("/api/content", content);
 server.use("/api/media", media);
 
 // Route Not Found
-server.use(function (req, res) {
+server.use(function(req, res) {
   const error = new Error("Lost location");
-  return res.status(404).json({ message: "Route Not found", error });
+  return res
+    .status(404)
+    .json({ success: false, message: "Route Not found", error });
 });
 
-module.exports = server;
+export default server;

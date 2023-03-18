@@ -1,15 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-// Load Media Model
-const Media = require("../../models/Media");
+// Load Media Mode
+import Media from "../../models/Media.js";
 
 /*
  * @route   GET api/media/test
  * @desc    Tests media route
  * @access  Public
  */
-router.get("/test", (req, res) => res.json({ success: "Media route works" }));
+router.get("/test", (req, res) =>
+  res.json({ success: true, message: "Media route works" })
+);
 
 /*
  * @route   GET api/media
@@ -119,4 +121,4 @@ router.delete("/:media_id", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

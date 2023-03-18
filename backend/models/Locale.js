@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const LocaleSchema = new Schema({
@@ -34,4 +34,4 @@ const LocaleSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("locale", LocaleSchema);
+export default mongoose.model("locale", LocaleSchema);

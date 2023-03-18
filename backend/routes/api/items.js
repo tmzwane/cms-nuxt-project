@@ -1,15 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Load Item Model
-const Item = require("../../models/Item");
+import Item from "../../models/Item.js";
 
 /*
  * @route   GET api/items/test
  * @desc    Tests item route
  * @access  Public
  */
-router.get("/test", (req, res) => res.json({ success: "Item route works" }));
+router.get("/test", (req, res) =>
+  res.json({ success: true, message: "Item route works" })
+);
 
 /*
  * @route   GET api/items
@@ -127,4 +129,4 @@ router.delete("/:item_id", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;
