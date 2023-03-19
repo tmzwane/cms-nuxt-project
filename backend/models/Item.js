@@ -16,12 +16,32 @@ const ItemsSchema = new Schema({
     type: String,
   },
   media: {
-    type: Schema.Types.ObjectId,
-    ref: "media",
+    type: {
+      type: String,
+    },
+    src: {
+      type: String,
+    },
   },
   content: {
-    type: Schema.Types.ObjectId,
-    ref: "content",
+    src: {
+      type: String,
+    },
+    extension: {
+      type: String,
+    },
+    text: {
+      type: String,
+    },
+    quality: {
+      type: String,
+    },
+    size: {
+      type: String,
+    },
+    size_unit: {
+      type: String,
+    },
   },
   categories: [
     {

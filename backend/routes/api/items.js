@@ -4,6 +4,10 @@ const router = express.Router();
 // Load Item Model
 import Item from "../../models/Item.js";
 
+// Load Utils
+import { isEmpty, slugIdGenerator } from "../../utils/helpers.js";
+import { addNewLocale, updateLocale } from "../../utils/utilities.js";
+
 /*
  * @route   GET api/items/test
  * @desc    Tests item route
@@ -33,38 +37,39 @@ router.post("/", (req, res) => {
   const payload = req.body;
   const errors = { success: false };
 
-  Item.findOne({ slug: payload.slug }).then((item) => {
-    // Avoid creating duplicating slugs
-    if (item) {
-      errors.message = "Item with the same slug already exists";
-      return res.status(403).json(errors);
-    }
+  // Create a local first for the item
 
-    const newItem = new Item({
-      item_type: payload.item_type,
-      slug: payload.slug,
-      locale: payload.locale,
-      creator: payload.creator,
-      media: payload.media,
-      content: payload.content,
-      categories: payload.categories,
-    });
+  // Generate slug from title, and limit only to 7 words
+  let slug = payload.title.toLowerCase().split(" ").slice(0, 7);
 
-    newItem
-      .save()
-      .then((item) => {
-        res.status(201).json({
-          success: true,
-          data: item,
-          message: "Item created",
-        });
-      })
-      .catch((errorDetails) => {
-        errors.message = "Request failed";
-        errors.details = errorDetails;
-        res.status(500).json({ errors });
-      });
+  // Make slugs unique by generating a random 7 characters Id
+  const slugId = slugIdGenerator();
+  slug = slug.join("-") + `-${slugId}`;
+
+  const newItem = new Item({
+    item_type: payload.item_type,
+    slug,
+    locale: payload.locale,
+    creator: payload.creator,
+    media: payload.media,
+    content: payload.content,
+    categories: payload.categories,
   });
+
+  newItem
+    .save()
+    .then((item) => {
+      res.status(201).json({
+        success: true,
+        data: item,
+        message: "Item created",
+      });
+    })
+    .catch((errorDetails) => {
+      errors.message = "Request failed";
+      errors.details = errorDetails;
+      res.status(500).json({ errors });
+    });
 });
 
 /*
