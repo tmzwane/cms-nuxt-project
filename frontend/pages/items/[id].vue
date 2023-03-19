@@ -1,12 +1,6 @@
 <template>
   <div>
-    <p>Item Id: {{ id }}</p>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem dolore
-      dolores exercitationem suscipit enim ad optio dignissimos fugit quas
-      blanditiis, porro magni maiores ipsa, corrupti, officia iure corporis
-      animi dolor?
-    </p>
+    <ItemDetails :item="item" />
   </div>
 </template>
 
@@ -15,4 +9,12 @@ definePageMeta({
   layout: "items",
 });
 const { id } = useRoute().params;
+
+const item = {
+  id: "123",
+  locale: {
+    title: "Test Title 1",
+    description: "Test title one description",
+  },
+};
 </script>

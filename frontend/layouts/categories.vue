@@ -1,8 +1,9 @@
 <template>
   <div>
     <header class="shadow-sm bg-white">
-      <nav class="container mx-auto p-4">
-        <nuxt-link to="/categories" class="font-bold">Return</nuxt-link>
+      <nav class="container flex max-auto justify-between p-4">
+        <nuxt-link to="/" class="font-bold btn">Basebone Assessment</nuxt-link>
+        <nuxt-link to="/categories" class="font-bold">All Categories</nuxt-link>
       </nav>
     </header>
 
@@ -20,9 +21,3 @@
     </footer>
   </div>
 </template>
-
-<style scoped>
-.router-link-exact-active {
-  color: #12b488;
-}
-</style>
