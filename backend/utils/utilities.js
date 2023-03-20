@@ -1,5 +1,5 @@
 // Load Locale Model
-import Locale from "../../models/Locale.js";
+import Locale from "../models/Locale.js";
 
 export async function addNewLocale(payload) {
   const errors = { success: false };

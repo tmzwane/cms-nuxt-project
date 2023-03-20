@@ -4,6 +4,12 @@ const router = express.Router();
 // Load Category Model
 import Category from "../../models/Category.js";
 
+// Load Utilities to help with managing Locale
+import { addNewLocale, updateLocale } from "../../utils/utilities.js";
+
+// Load helpers
+import { isEmpty, slugIdGenerator } from "../../utils/helpers.js";
+
 /*
  * @route   GET api/categories/test
  * @desc    Tests categories route
@@ -18,10 +24,26 @@ router.get("/test", (req, res) =>
  * @desc    Get all categories
  * @access  Public
  */
-router.get("/", (req, res) => {
-  Category.find().then((categories) => {
-    return res.json(categories);
-  });
+router.get("/", async (req, res) => {
+  try {
+    const categories = await Category.find()
+      .populate("locale")
+      .populate("parent")
+      .populate("ancestors");
+
+    // Successful response
+    return res.status(200).json({
+      success: true,
+      data: categories,
+      message: "Category created",
+    });
+  } catch (errorDetails) {
+    // Error response
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    errors.status_code = 500;
+    return errors;
+  }
 });
 
 /*
@@ -29,45 +51,70 @@ router.get("/", (req, res) => {
  * @desc    Create a new category
  * @access  Public
  */
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const payload = req.body;
   const errors = { success: false };
 
-  Category.findOne({
-    $or: [{ slug: payload.slug }, { path: payload.path }],
-  }).then((category) => {
-    // Avoid creating duplicating slugs and paths
-    if (category) {
-      errors.message = "Category with the same slug or path already exists";
-      return res.status(403).json(errors);
-    }
+  const locale = await addNewLocale(payload);
 
-    // TODO: Validate Parent and Ancestor IDs
-    // TODO: Validate Locale
+  if (!locale.success) {
+    return res.status(locale.status_code).json(locale);
+  }
 
-    const newCategory = new Category({
-      slug: payload.slug,
-      path: payload.path,
-      parent_id: payload.parent_id,
-      ancestor_ids: payload.ancestor_ids,
-      locale: payload.locale,
-    });
-
-    newCategory
-      .save()
-      .then((category) => {
-        res.status(201).json({
-          success: true,
-          data: category,
-          message: "Category created",
-        });
-      })
-      .catch((errorDetails) => {
-        errors.message = "Request failed";
-        errors.details = errorDetails;
-        res.status(500).json({ errors });
-      });
+  const newCategory = new Category({
+    path: payload.path,
   });
+
+  newCategory.locale = locale.data._id;
+
+  // Generate slug from title, and limit only to 7 words
+  const slugPrefix = payload.title.toLowerCase().split(" ").slice(0, 7);
+
+  // Make slugs unique by generating a random 7 characters Id
+  const slugId = slugIdGenerator();
+  newCategory.slug = slugPrefix.join("-") + `-${slugId}`;
+
+  // Validate Parent ID and update ancestors
+  if (!isEmpty(payload.parent_id)) {
+    const parentCategory = await Category.findById(payload.parent_id);
+
+    if (!isEmpty(parentCategory)) {
+      newCategory.parent_id = parentCategory._id;
+      newCategory.ancestor_ids = [];
+      // If parent has a parent, then make that an ancestor of the child
+      if (!isEmpty(parentCategory.parent_id)) {
+        newCategory.ancestor_ids.push(parentCategory.parent_id);
+        // If parent has ancestors, then include them to the child's ancestry
+        if (!isEmpty(parentCategory.ancestor_ids)) {
+          newCategory.ancestor_ids.push(...parentCategory.ancestor_ids);
+        }
+      }
+    }
+  }
+
+  try {
+    // Add category to database
+    const toAdd = await newCategory.save();
+
+    // Query added category and populate locale, parent, and ancestors
+    const category = await Category.findById(toAdd._id)
+      .populate("locale")
+      .populate("parent")
+      .populate("ancestors");
+
+    // Successful response
+    return res.status(201).json({
+      success: true,
+      data: category,
+      message: "Category created",
+    });
+  } catch (errorDetails) {
+    // Error response
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    errors.status_code = 500;
+    return errors;
+  }
 });
 
 /*

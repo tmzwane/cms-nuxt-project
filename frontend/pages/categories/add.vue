@@ -109,7 +109,12 @@
 
     <!-- Form Buttons -->
     <div class="mx-auto">
-      <button class="btn-create font-bold mr-2">Submit</button>
+      <button
+        class="btn-create font-bold mr-2"
+        @click.prevent="submitCategoryForm"
+      >
+        Submit
+      </button>
       <nuxt-link to="/categories" class="btn-delete font-bold">
         Cancel
       </nuxt-link>
@@ -119,6 +124,15 @@
 
 <script setup>
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useCategoryStore } from "~/stores/CategoryStore";
+import { useUtilities } from "~/utils/utilities";
+
+const categoryStore = useCategoryStore();
+const { isEmpty, truncateWords } = useUtilities();
+
+// Accessing getters and state
+const { allCategories, loading } = storeToRefs(categoryStore);
 
 const title = ref("");
 const path = ref("");
@@ -135,4 +149,38 @@ const seoDescription = ref("");
 const seoSummary = ref("");
 
 const useSEOValues = ref(true);
+
+function submitCategoryForm() {
+  if (autoSummary.value && isEmpty(summary.value)) {
+    // Limit summary to default 20 words
+    summary.value = truncateWords(description.value);
+  }
+
+  if (autoSEOTitle.value && isEmpty(seoTitle.value)) {
+    seoTitle.value = title.value;
+  }
+
+  if (autoSEODescription.value && isEmpty(seoDescription.value)) {
+    // Limit SEO Description to 50 words
+    seoDescription.value = truncateWords(description.value, 50);
+  }
+
+  if (autoSEOSummary.value && isEmpty(seoSummary.value)) {
+    // Use whatever is available in summary
+    seoSummary.value = summary.value;
+  }
+
+  const payload = {
+    title: title.value,
+    path: path.value,
+    description: description.value,
+    summary: summary.value,
+    seo_title: seoTitle.value,
+    seo_description: seoDescription.value,
+    seo_summary: seoSummary.value,
+    use_seo_values: useSEOValues.value,
+  };
+
+  categoryStore.createCategory(payload);
+}
 </script>

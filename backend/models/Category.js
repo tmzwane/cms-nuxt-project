@@ -32,4 +32,18 @@ const CategorySchema = new Schema({
   },
 });
 
+// To use with virtual populate to query parent details
+CategorySchema.virtual("parent", {
+  ref: "categories",
+  localField: "parent_id",
+  foreignField: "_id",
+});
+
+// To use with virtual populate to query ancestors' details
+CategorySchema.virtual("ancestors", {
+  ref: "categories",
+  localField: "ancestor_ids",
+  foreignField: "_id",
+});
+
 export default mongoose.model("categories", CategorySchema);

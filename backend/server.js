@@ -9,9 +9,6 @@ import { mongoURI } from "./utils/config.js";
 // API Routes
 import items from "./routes/api/items.js";
 import categories from "./routes/api/categories.js";
-import locale from "./routes/api/locale.js";
-import content from "./routes/api/content.js";
-import media from "./routes/api/media.js";
 
 const server = express();
 
@@ -38,12 +35,9 @@ mongoose
 // API Endpoints
 server.use("/api/items", items);
 server.use("/api/categories", categories);
-server.use("/api/locale", locale);
-server.use("/api/content", content);
-server.use("/api/media", media);
 
 // Route Not Found
-server.use(function(req, res) {
+server.use(function (req, res) {
   const error = new Error("Lost location");
   return res
     .status(404)
