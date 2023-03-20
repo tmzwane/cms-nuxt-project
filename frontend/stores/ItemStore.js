@@ -24,7 +24,7 @@ export const useItemStore = defineStore("itemStore", {
       return state.items;
     },
     recentItems: (state) => {
-      return state.items.splice(0, 5);
+      return state.items.copyWithin(5, 0);
     },
     itemsLoading: (state) => {
       return state.serverRequestLoading;

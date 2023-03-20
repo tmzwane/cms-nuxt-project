@@ -13,7 +13,7 @@ export const useCategoryStore = defineStore("categoryStore", {
       return state.categories;
     },
     recentCategories: (state) => {
-      return state.categories.splice(0, 5);
+      return state.categories.copyWithin(5, 0);
     },
     categoriesLoading: (state) => {
       return state.serverRequestLoading;

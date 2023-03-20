@@ -33,7 +33,7 @@
     <!-- Recently Added Items  -->
     <div v-if="items.length > 0" class="mt-5">
       <h1 class="text-xl mb-2">Recently Added Items...</h1>
-      <div class="grid grid-cols-4 gap-5">
+      <div class="responsive-card-layout">
         <div v-for="i in items">
           <ItemCard :item="i" />
         </div>
@@ -43,7 +43,7 @@
     <!-- Recently Added Categories  -->
     <div v-if="categories.length > 0" class="mt-5">
       <h1 class="text-xl mb-2">Recently Added Categories...</h1>
-      <div class="grid grid-cols-4 gap-5">
+      <div class="responsive-card-layout">
         <div v-for="i in categories">
           <CategoryCard :category="i" />
         </div>
