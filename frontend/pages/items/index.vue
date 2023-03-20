@@ -9,13 +9,10 @@
 </template>
 
 <script setup>
-const items = [
-  {
-    id: "123",
-    locale: {
-      title: "Test Title 1",
-      description: "Test title one description",
-    },
-  },
-];
+import { storeToRefs } from "pinia";
+import { useItemStore } from "~/stores/ItemStore";
+const itemStore = useItemStore();
+
+// Accessing getters and state
+const { items } = storeToRefs(itemStore);
 </script>

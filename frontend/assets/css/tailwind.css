@@ -7,8 +7,56 @@ body {
 }
 
 @layer components {
+  .form-fields {
+    @apply block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
+  }
+
+  .form-content {
+    @apply w-full block p-5 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
+  }
+
   .btn,
   .router-link-exact-active {
     @apply bg-[#12b488] text-white text-sm rounded-md px-3 py-2;
+  }
+
+  .btn:hover {
+    @apply bg-[#104d3d];
+  }
+
+  .btn-create {
+    @apply bg-[#12b488] text-white font-bold py-2 px-4 rounded;
+  }
+
+  .btn-create:hover {
+    @apply bg-[#104d3d];
+  }
+
+  .btn-update {
+    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+  }
+
+  .btn-update:hover {
+    @apply bg-blue-700;
+  }
+
+  .btn-update:focus {
+    @apply outline-none;
+  }
+
+  .btn-delete {
+    @apply bg-red-500 text-white font-bold py-2 px-4 rounded;
+  }
+
+  .btn-delete:hover {
+    @apply bg-red-700;
+  }
+
+  .btn-delete:focus {
+    @apply outline-none;
+  }
+
+  .btn-view-asset {
+    @apply inline-block px-6 py-2 border-2 border-blue-400 text-blue-400 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out;
   }
 }

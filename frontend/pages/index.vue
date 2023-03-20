@@ -8,10 +8,7 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-blue-50"
           >
-            <font-awesome-icon
-              icon="fa-solid fa-user-secret"
-              class="text-xl text-blue-400"
-            />
+            <Icon name="fa-user-secret" class="text-2xl text-blue-400" />
           </div>
 
           <div class="ml-4">
@@ -26,10 +23,7 @@
           <div
             class="flex h-12 w-12 items-center justify-center rounded-full border border-orange-100 bg-orange-50"
           >
-            <font-awesome-icon
-              icon="fa-solid fa-user-secret"
-              class="text-xl text-orange-400"
-            />
+            <Icon name="fa-user-secret" class="text-2xl text-orange-400" />
           </div>
 
           <div class="ml-4">
@@ -43,13 +37,12 @@
 </template>
 
 <script setup>
-const items = [
-  {
-    id: "123",
-    locale: {
-      title: "Test Title 1",
-      description: "Test title one description",
-    },
-  },
-];
+import { storeToRefs } from "pinia";
+import { useItemStore } from "~/stores/ItemStore";
+const itemStore = useItemStore();
+
+// Accessing getters and state
+const { items } = storeToRefs(itemStore);
+
+// await itemStore.initAuth();
 </script>
