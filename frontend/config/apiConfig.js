@@ -15,3 +15,10 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default axios.create({
   baseURL: serverUrl,
 });
+
+export const noConnection = {
+  success: false,
+  error: "no connection to backend",
+  status_code: 503,
+  description: "Couldn't connect to the requested backend.",
+};

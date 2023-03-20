@@ -1,17 +1,9 @@
-import axios from "../config/apiConfig";
+import axios, { noConnection } from "../config/apiConfig";
 import { defineStore } from "pinia";
 
 export const useItemStore = defineStore("itemStore", {
   state: () => ({
-    items: [
-      {
-        id: "123",
-        locale: {
-          title: "Test Title 1",
-          description: "Test title one description",
-        },
-      },
-    ],
+    items: [],
     itemTypes: ["Text", "Image", "Audio", "Video", "Game"],
     itemQualities: ["Low", "Medium", "High"],
     sizeUnits: ["B", "KB", "MB", "GB", "TB", "PB", "EB"],
@@ -43,8 +35,19 @@ export const useItemStore = defineStore("itemStore", {
         const { data: response } = await axios.get(`/items`);
         this.items = response.data || [];
       } catch (errorDetails) {
+        if (Object.keys(errorDetails).length < 1) {
+          errorDetails = noConnection;
+        }
         this.hasError = true;
         this.error = errorDetails;
+        const errorMessage =
+          errorDetails.error ||
+          errorDetails.message ||
+          errorDetails.description;
+        throw createError({
+          statusCode: errorDetails.status_code,
+          statusMessage: errorMessage,
+        });
       }
       this.serverRequestLoading = false;
     },
@@ -54,8 +57,19 @@ export const useItemStore = defineStore("itemStore", {
         const { data: response } = await axios.post(`items`, payload);
         this.items.push(response.data);
       } catch (errorDetails) {
+        if (Object.keys(errorDetails).length < 1) {
+          errorDetails = noConnection;
+        }
         this.hasError = true;
         this.error = errorDetails;
+        const errorMessage =
+          errorDetails.error ||
+          errorDetails.message ||
+          errorDetails.description;
+        throw createError({
+          statusCode: errorDetails.status_code,
+          statusMessage: errorMessage,
+        });
       }
       this.serverRequestLoading = false;
     },

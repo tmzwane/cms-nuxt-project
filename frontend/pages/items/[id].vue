@@ -5,16 +5,29 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
+import { useItemStore } from "~/stores/ItemStore";
+import { useUtilities } from "~/utils/utilities";
+
 definePageMeta({
   layout: "items",
 });
+
+const itemStore = useItemStore();
+const { allItems } = storeToRefs(itemStore);
+const { isEmpty } = useUtilities();
+
 const { id } = useRoute().params;
 
-const item = {
-  id: "123",
-  locale: {
-    title: "Test Title 1",
-    description: "Test title one description",
-  },
-};
+const item = allItems.value.find((item) => {
+  return item._id === id;
+});
+
+if (isEmpty(item)) {
+  throw createError({
+    statusCode: 400,
+    statusMessage: `Could not find specified Item Id: ${id}`,
+    fatal: true,
+  });
+}
 </script>

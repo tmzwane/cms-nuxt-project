@@ -1,3 +1,261 @@
 <template>
-  <div></div>
+  <div class="pt-6 px-4 max-w-4xl">
+    <!-- Title -->
+    <div class="form-group mb-6">
+      <input
+        v-model="title"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item title here..."
+      />
+    </div>
+
+    <!-- Source -->
+    <div class="form-group mb-6">
+      <input
+        v-model="src"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item URL here..."
+      />
+    </div>
+
+    <!-- Extension -->
+    <div class="form-group mb-6">
+      <input
+        v-model="extension"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item extension here..."
+      />
+    </div>
+
+    <!-- Creator -->
+    <div class="form-group mb-6">
+      <input
+        v-model="creator"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item creator here..."
+      />
+    </div>
+
+    <!-- Type -->
+    <div class="">
+      <div class="form-group mb-6">
+        <select v-model="type" class="form-control form-fields">
+          <option value="" selected disabled>Choose Item Type</option>
+          <option v-for="(item, idx) of itemTypes" :value="item" :key="idx">
+            {{ item }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Quality -->
+    <div class="">
+      <div class="form-group mb-6">
+        <select v-model="quality" class="form-control form-fields">
+          <option value="" selected disabled>Choose Item Quality</option>
+          <option
+            v-for="(quality, idx) of itemQualities"
+            :value="quality"
+            :key="idx"
+          >
+            {{ quality }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div class="form-group mb-6">
+      <input
+        v-model="size"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item size here..."
+      />
+    </div>
+
+    <!-- Size Unit -->
+    <div class="">
+      <div class="form-group mb-6">
+        <select v-model="sizeUnit" class="form-control form-fields">
+          <option value="" selected disabled>Choose Item Size Unit</option>
+          <option
+            v-for="(sizeUnit, idx) of sizeUnits"
+            :value="sizeUnit"
+            :key="idx"
+          >
+            {{ sizeUnit }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div v-if="allCategories.length > 0" class="">
+      <div class="form-group mb-6">
+        <select v-model="categories" class="form-control form-fields" multiple>
+          <option value="" selected disabled>Choose Item Category</option>
+          <option
+            v-for="(category, idx) of allCategories"
+            :value="category._id"
+            :key="idx"
+          >
+            {{ category.locale.title }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-6">
+      <textarea
+        v-model="description"
+        rows="4"
+        placeholder="Item description here..."
+        class="form-control form-fields"
+      ></textarea>
+    </div>
+
+    <!-- Summary -->
+    <div class="form-group mb-6">
+      <textarea
+        v-model="summary"
+        rows="3"
+        placeholder="Item summary here..."
+        class="form-control form-fields"
+      ></textarea>
+    </div>
+
+    <!-- SEO Title -->
+    <div class="form-group mb-6">
+      <input
+        v-model="seoTitle"
+        type="text"
+        class="form-control form-fields"
+        placeholder="Item SEO title here..."
+      />
+    </div>
+
+    <!-- SEO Description -->
+    <div class="form-group mb-6">
+      <textarea
+        v-model="seoDescription"
+        rows="4"
+        placeholder="Item SEO description here..."
+        class="form-control form-fields"
+      ></textarea>
+    </div>
+
+    <!-- SEO Description -->
+    <div class="form-group mb-6">
+      <textarea
+        v-model="seoSummary"
+        rows="4"
+        placeholder="Item SEO summary here..."
+        class="form-control form-fields"
+      ></textarea>
+    </div>
+
+    <!-- Use SEO Values -->
+    <div class="form-group mb-6 mx-auto">
+      <CommonFormSwitch
+        label="Use SEO"
+        :checked="useSEOValues"
+        @toggle-switch="useSEOValues = !useSEOValues"
+      />
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="flex justify-end mx-auto">
+      <button
+        class="btn-create font-bold mr-2"
+        @click.prevent="submitUpdateItemForm"
+      >
+        Submit
+      </button>
+      <nuxt-link to="/categories" class="btn-delete font-bold">
+        Cancel
+      </nuxt-link>
+    </div>
+  </div>
 </template>
+
+<script setup>
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useItemStore } from "~/stores/ItemStore";
+import { useCategoryStore } from "~/stores/CategoryStore";
+import { useUtilities } from "~/utils/utilities";
+
+const itemStore = useItemStore();
+const categoryStore = useCategoryStore();
+const { isEmpty } = useUtilities();
+
+// Accessing store getters
+const { allItems, itemTypes, itemQualities, sizeUnits } =
+  storeToRefs(itemStore);
+const { allCategories } = storeToRefs(categoryStore);
+
+const { id } = useRoute().params;
+
+const activeItem = allItems.value.find((item) => {
+  return item._id === id;
+});
+
+if (isEmpty(activeItem)) {
+  throw createError({
+    statusCode: 400,
+    statusMessage: `Could not find specified Item Id: ${id}`,
+    fatal: true,
+  });
+}
+
+const title = ref(activeItem.locale.title);
+const src = ref(activeItem.media.src);
+const extension = ref(activeItem.content.extension);
+const creator = ref(activeItem.creator);
+const type = ref(activeItem.item_type);
+const quality = ref(activeItem.content.quality);
+const size = ref(activeItem.content.size);
+const sizeUnit = ref(activeItem.content.size_unit);
+const categories = ref(
+  activeItem.categories.filter((cat) => {
+    return cat.locale.title;
+  })
+);
+const description = ref(activeItem.locale.description);
+const summary = ref(activeItem.locale.summary);
+
+const seoTitle = ref(activeItem.locale.seo_title);
+const seoDescription = ref(activeItem.locale.seo_description);
+const seoSummary = ref(activeItem.locale.seo_summary);
+
+const useSEOValues = ref(activeItem.locale.use_seo_values);
+
+function submitUpdateItemForm() {
+  const payload = {
+    title: title.value,
+    src: src.value,
+    extension: extension.value,
+    creator: creator.value,
+    item_type: type.value,
+    type: type.value,
+    quality: quality.value,
+    size: size.value,
+    size_unit: sizeUnit.value,
+    categories: categories.value,
+    description: description.value,
+    summary: summary.value,
+    seo_title: seoTitle.value,
+    seo_description: seoDescription.value,
+    seo_summary: seoSummary.value,
+    use_seo_values: useSEOValues.value,
+  };
+
+  itemStore.updateItem(payload);
+}
+</script>

@@ -1,4 +1,4 @@
-import axios from "../config/apiConfig";
+import axios, { noConnection } from "../config/apiConfig";
 import { defineStore } from "pinia";
 
 export const useCategoryStore = defineStore("categoryStore", {
@@ -32,8 +32,19 @@ export const useCategoryStore = defineStore("categoryStore", {
         const { data: response } = await axios.get(`/categories`);
         this.categories = response.data || [];
       } catch (errorDetails) {
+        if (Object.keys(errorDetails).length < 1) {
+          errorDetails = noConnection;
+        }
         this.hasError = true;
         this.error = errorDetails;
+        const errorMessage =
+          errorDetails.error ||
+          errorDetails.message ||
+          errorDetails.description;
+        throw createError({
+          statusCode: errorDetails.status_code,
+          statusMessage: errorMessage,
+        });
       }
       this.serverRequestLoading = false;
     },
@@ -43,8 +54,19 @@ export const useCategoryStore = defineStore("categoryStore", {
         const { data: response } = await axios.post(`/categories`, payload);
         this.categories.push(response.data);
       } catch (errorDetails) {
+        if (Object.keys(errorDetails).length < 1) {
+          errorDetails = noConnection;
+        }
         this.hasError = true;
         this.error = errorDetails;
+        const errorMessage =
+          errorDetails.error ||
+          errorDetails.message ||
+          errorDetails.description;
+        throw createError({
+          statusCode: errorDetails.status_code,
+          statusMessage: errorMessage,
+        });
       }
       this.serverRequestLoading = false;
     },

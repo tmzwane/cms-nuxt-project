@@ -8,7 +8,10 @@
         <h2 class="text-4xl my-7">{{ item.locale.title }}</h2>
         <h3 class="font-bold border-b-2 mb-4 pb-2">Item description:</h3>
         <p class="mb-7">{{ item.locale.description }}</p>
-        <nuxt-link to="/items/update" class="btn-update font-bold mr-2">
+        <nuxt-link
+          :to="`/items/update/${item._id}`"
+          class="btn-update font-bold mr-2"
+        >
           Update
         </nuxt-link>
         <button class="btn-delete font-bold">Delete</button>

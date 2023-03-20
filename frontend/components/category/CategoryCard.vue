@@ -4,7 +4,7 @@
     <p class="font-bold text-gray-500 m-4 truncate">
       {{ category.locale.title }}
     </p>
-    <NuxtLink :to="`/categories/${category.id}`">
+    <NuxtLink :to="`/categories/${category._id}`">
       <p class="btn my-4">View Details</p>
     </NuxtLink>
   </div>
