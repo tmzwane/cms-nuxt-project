@@ -76,3 +76,22 @@ export async function updateLocale(localeId, payload) {
     return errors;
   }
 }
+
+export async function deleteLocale(localeId) {
+  const errors = { success: false };
+
+  try {
+    const deletedLocale = await Locale.findOneAndRemove({ _id: localeId });
+    return {
+      success: true,
+      data: deletedLocale,
+      status_code: 204,
+      message: "Locale deleted",
+    };
+  } catch (errorDetails) {
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    errors.status_code = 500;
+    return errors;
+  }
+}

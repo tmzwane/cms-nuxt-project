@@ -5,7 +5,11 @@ const router = express.Router();
 import Category from "../../models/Category.js";
 
 // Load Utilities to help with managing Locale
-import { addNewLocale, updateLocale } from "../../utils/utilities.js";
+import {
+  addNewLocale,
+  updateLocale,
+  deleteLocale,
+} from "../../utils/utilities.js";
 
 // Load helpers
 import { isEmpty, slugIdGenerator } from "../../utils/helpers.js";
@@ -201,18 +205,28 @@ router.put("/:category_id", async (req, res) => {
  * @access  Public
  * @params  category_id
  */
-router.delete("/:category_id", (req, res) => {
+router.delete("/:category_id", async (req, res) => {
   const categoryId = req.params.category_id;
   const errors = { success: false };
-  Category.findOneAndRemove({ _id: categoryId })
-    .then((category) => {
-      res.json({ success: true, data: category, message: "Category deleted" });
-    })
-    .catch((errorDetails) => {
-      errors.message = "Request failed";
-      errors.details = errorDetails;
-      res.status(500).json({ errors });
+
+  try {
+    // Delete Category
+    const deletedCategory = await Category.findOneAndRemove({
+      _id: categoryId,
     });
+    const deletedLocale = await deleteLocale(deletedCategory.locale);
+
+    // Delete Locale
+    if (deletedLocale.success) {
+      return res.statusCode(204);
+    } else {
+      return res.status(deletedLocale.status_code).json(deletedLocale);
+    }
+  } catch (errorDetails) {
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    return res.status(500).json({ errors });
+  }
 });
 
 export default router;

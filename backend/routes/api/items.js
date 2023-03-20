@@ -6,7 +6,11 @@ import Item from "../../models/Item.js";
 
 // Load Utils
 import { isEmpty, slugIdGenerator } from "../../utils/helpers.js";
-import { addNewLocale, updateLocale } from "../../utils/utilities.js";
+import {
+  addNewLocale,
+  updateLocale,
+  deleteLocale,
+} from "../../utils/utilities.js";
 
 /*
  * @route   GET api/items/test
@@ -30,7 +34,7 @@ router.get("/", async (req, res) => {
     return res.status(200).json({
       success: true,
       data: items,
-      message: "Category created",
+      message: "Item created",
     });
   } catch (errorDetails) {
     // Error response
@@ -115,42 +119,59 @@ router.post("/", async (req, res) => {
  * @desc    Update a item using Id
  * @access  Public
  */
-router.put("/", (req, res) => {
+router.put("/:item_id", async (req, res) => {
   const itemId = req.params.item_id;
   const payload = req.body;
   const errors = { success: false };
 
-  Item.findById(itemId).then((item) => {
-    if (!item) {
-      errors.message = "Item doesn't exist";
-      return res.status(404).json(errors);
-    }
+  const item = await Item.findById(categoryId);
 
-    // TODO: Check if the slug don't already exist
+  if (isEmpty(item)) {
+    errors.message = "Item doesn't exist";
+    return res.status(404).json(errors);
+  }
 
-    const itemUpdate = {};
-    itemUpdate.item_type = payload.item_type || item.item_type;
-    itemUpdate.slug = payload.slug || item.slug;
-    itemUpdate.locale = payload.locale || item.locale;
-    itemUpdate.creator = payload.creator || item.creator;
-    itemUpdate.media = payload.media || item.media;
-    itemUpdate.content = payload.content || item.content;
-    itemUpdate.categories = payload.categories || item.categories;
+  // Create a local first for the category
+  const localUpdate = await updateLocale(item.locale, payload);
 
-    Item.findByIdAndUpdate(itemId, { $set: itemUpdate }, { new: true })
-      .then((item) => {
-        res.json({
-          success: true,
-          data: item,
-          message: "Item updated",
-        });
-      })
-      .catch((errorDetails) => {
-        errors.message = "Request failed";
-        errors.details = errorDetails;
-        res.status(500).json({ errors });
-      });
-  });
+  if (!localUpdate.success) {
+    return res.status(localUpdate.status_code).json(localUpdate);
+  }
+
+  // Prepare item update
+  const toUpdate = {};
+
+  // Update slug if title has changed
+  let slug;
+  if (category.locale.title !== payload.title) {
+    const slugPrefix = payload.title.toLowerCase().split(" ").slice(0, 7);
+    const slugId = slugIdGenerator();
+    slug = slugPrefix.join("-") + `-${slugId}`;
+  } else {
+    slug = category.slug;
+  }
+
+  toUpdate.slug = slug;
+  toUpdate.item_type = payload.item_type || item.item_type;
+  toUpdate.locale = payload.locale || item.locale;
+  toUpdate.creator = payload.creator || item.creator;
+  toUpdate.media = payload.media || item.media;
+  toUpdate.content = payload.content || item.content;
+  toUpdate.categories = payload.categories || item.categories;
+
+  try {
+    const itemUpdate = await Item.findByIdAndUpdate(itemId, toUpdate);
+
+    return res.json({
+      success: true,
+      data: itemUpdate,
+      message: "Item updated",
+    });
+  } catch (errorDetails) {
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    return res.status(500).json({ errors });
+  }
 });
 
 /*
@@ -158,18 +179,28 @@ router.put("/", (req, res) => {
  * @desc    Remove item using Id
  * @access  Public
  */
-router.delete("/:item_id", (req, res) => {
+router.delete("/:item_id", async (req, res) => {
   const itemId = req.params.item_id;
   const errors = { success: false };
-  Item.findOneAndRemove({ _id: itemId })
-    .then((item) => {
-      res.json({ success: true, data: item, message: "Item deleted" });
-    })
-    .catch((errorDetails) => {
-      errors.message = "Request failed";
-      errors.details = errorDetails;
-      res.status(500).json({ errors });
+
+  try {
+    // Delete Item
+    const deletedItem = await Item.findOneAndRemove({
+      _id: itemId,
     });
+    const deletedLocale = await deleteLocale(deletedItem.locale);
+
+    // Delete Locale
+    if (deletedLocale.success) {
+      return res.statusCode(204);
+    } else {
+      return res.status(deletedLocale.status_code).json(deletedLocale);
+    }
+  } catch (errorDetails) {
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    return res.status(500).json({ errors });
+  }
 });
 
 export default router;
