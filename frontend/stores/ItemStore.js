@@ -1,4 +1,4 @@
-import axios, { noConnection } from "../config/apiConfig";
+import axios, { backendErrorParser } from "../config/apiConfig";
 import { defineStore } from "pinia";
 
 export const useItemStore = defineStore("itemStore", {
@@ -30,50 +30,38 @@ export const useItemStore = defineStore("itemStore", {
   },
   actions: {
     async retrieveItems() {
-      this.serverRequestLoading = true;
       try {
         const { data: response } = await axios.get(`/items`);
         this.items = response.data || [];
       } catch (errorDetails) {
-        if (Object.keys(errorDetails).length < 1) {
-          errorDetails = noConnection;
-        }
-        this.hasError = true;
-        this.error = errorDetails;
-        const errorMessage =
-          errorDetails.error ||
-          errorDetails.message ||
-          errorDetails.description;
-        throw createError({
-          statusCode: errorDetails.status_code,
-          statusMessage: errorMessage,
-          fatal: true,
-        });
+        backendErrorParser(errorDetails);
       }
-      this.serverRequestLoading = false;
     },
     async createItem(payload) {
-      this.serverRequestLoading = true;
       try {
         const { data: response } = await axios.post(`items`, payload);
         this.items.push(response.data);
       } catch (errorDetails) {
-        if (Object.keys(errorDetails).length < 1) {
-          errorDetails = noConnection;
-        }
-        this.hasError = true;
-        this.error = errorDetails;
-        const errorMessage =
-          errorDetails.error ||
-          errorDetails.message ||
-          errorDetails.description;
-        throw createError({
-          statusCode: errorDetails.status_code,
-          statusMessage: errorMessage,
-          fatal: true,
-        });
+        backendErrorParser(errorDetails);
       }
-      this.serverRequestLoading = false;
+    },
+    async updateItem(payload) {
+      try {
+        const { data: response } = await axios.put(
+          `items/${payload.id}`,
+          payload
+        );
+        this.items.push(response.data);
+      } catch (errorDetails) {
+        backendErrorParser(errorDetails);
+      }
+    },
+    async deleteItem(id) {
+      try {
+        await axios.delete(`/items/${id}`);
+      } catch (errorDetails) {
+        backendErrorParser(errorDetails);
+      }
     },
   },
 });

@@ -49,5 +49,12 @@ export const useCategoryStore = defineStore("categoryStore", {
         backendErrorParser(errorDetails);
       }
     },
+    async deleteCategory(id) {
+      try {
+        await axios.delete(`/categories/${id}`);
+      } catch (errorDetails) {
+        backendErrorParser(errorDetails);
+      }
+    },
   },
 });
