@@ -185,10 +185,12 @@ router.delete("/:item_id", async (req, res) => {
 
   try {
     // Delete Item
-    const deletedItem = await Item.findOneAndRemove({
+    const toDelete = await Item.findById(itemId);
+    await Item.findOneAndRemove({
       _id: itemId,
     });
-    const deletedLocale = await deleteLocale(deletedItem.locale);
+
+    const deletedLocale = await deleteLocale(toDelete.locale);
 
     // Delete Locale
     if (deletedLocale.success) {

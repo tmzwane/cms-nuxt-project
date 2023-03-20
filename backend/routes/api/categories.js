@@ -211,10 +211,12 @@ router.delete("/:category_id", async (req, res) => {
 
   try {
     // Delete Category
-    const deletedCategory = await Category.findOneAndRemove({
-      _id: categoryId,
+    const toDelete = await Category.findById(categoryId);
+    await Category.findOneAndRemove({
+      _id: toDelete._id,
     });
-    const deletedLocale = await deleteLocale(deletedCategory.locale);
+
+    const deletedLocale = await deleteLocale(toDelete.locale);
 
     // Delete Locale
     if (deletedLocale.success) {
