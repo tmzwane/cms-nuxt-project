@@ -20,20 +20,10 @@
       />
     </div>
 
-    <!-- Description -->
-    <div class="form-group mb-6">
-      <textarea
-        v-model="description"
-        rows="4"
-        placeholder="Category description here..."
-        class="form-control form-fields"
-      ></textarea>
-    </div>
-
     <!-- Parent -->
     <div v-if="allCategories.length > 0" class="">
       <div class="form-group mb-6">
-        <select class="form-control form-fields" multiple>
+        <select v-model="parentId" class="form-control form-fields">
           <option value="" selected disabled>Choose Parent Category</option>
           <option
             v-for="(category, idx) of allCategories"
@@ -44,6 +34,16 @@
           </option>
         </select>
       </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-6">
+      <textarea
+        v-model="description"
+        rows="4"
+        placeholder="Category description here..."
+        class="form-control form-fields"
+      ></textarea>
     </div>
 
     <!-- Summary: Shown when user doesn't want it auto-generated -->
@@ -152,6 +152,7 @@ const { allCategories, loading } = storeToRefs(categoryStore);
 
 const title = ref("");
 const path = ref("");
+const parentId = ref("");
 const description = ref("");
 const summary = ref("");
 
@@ -189,6 +190,7 @@ function submitCategoryForm() {
   const payload = {
     title: title.value,
     path: path.value,
+    parent_id: parentId.value,
     description: description.value,
     summary: summary.value,
     seo_title: seoTitle.value,

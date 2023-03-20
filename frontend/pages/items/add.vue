@@ -97,7 +97,7 @@
     <!-- Category -->
     <div v-if="allCategories.length > 0" class="">
       <div class="form-group mb-6">
-        <select class="form-control form-fields" multiple>
+        <select v-model="categories" class="form-control form-fields" multiple>
           <option value="" selected disabled>Choose Item Category</option>
           <option
             v-for="(category, idx) of allCategories"
@@ -232,6 +232,7 @@ const type = ref("");
 const quality = ref("");
 const size = ref("");
 const sizeUnit = ref("");
+const categories = ref([]);
 const description = ref("");
 const summary = ref("");
 
@@ -276,6 +277,7 @@ function submitItemForm() {
     quality: quality.value,
     size: size.value,
     size_unit: sizeUnit.value,
+    categories: categories.value,
     description: description.value,
     summary: summary.value,
     seo_title: seoTitle.value,
@@ -284,6 +286,6 @@ function submitItemForm() {
     use_seo_values: useSEOValues.value,
   };
 
-  categoryStore.createItem(payload);
+  itemStore.createItem(payload);
 }
 </script>
