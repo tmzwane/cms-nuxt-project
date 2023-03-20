@@ -30,6 +30,22 @@
       ></textarea>
     </div>
 
+    <!-- Parent -->
+    <div v-if="allCategories.length > 0" class="">
+      <div class="form-group mb-6">
+        <select class="form-control form-fields" multiple>
+          <option value="" selected disabled>Choose Parent Category</option>
+          <option
+            v-for="(category, idx) of allCategories"
+            :value="category._id"
+            :key="idx"
+          >
+            {{ category.locale.title }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <!-- Summary: Shown when user doesn't want it auto-generated -->
     <div v-if="!autoSummary" class="form-group mb-6">
       <textarea
@@ -108,7 +124,7 @@
     </div>
 
     <!-- Form Buttons -->
-    <div class="mx-auto">
+    <div class="lex justify-end mx-auto">
       <button
         class="btn-create font-bold mr-2"
         @click.prevent="submitCategoryForm"

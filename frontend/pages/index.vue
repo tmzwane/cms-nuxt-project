@@ -1,13 +1,11 @@
 <template>
-  <div class="flex flex-col">
-    <div
-      class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-    >
+  <div>
+    <!-- Home Control Layout -->
+    <div class="home-control-layout">
+      <!-- New Item Card/Button -->
       <nuxt-link to="/items/add">
-        <div class="flex items-start rounded-xl bg-white p-4 shadow-lg">
-          <div
-            class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-blue-50"
-          >
+        <div class="home-control-btn">
+          <div class="home-control-btn-icon border-blue-100 bg-blue-50">
             <Icon name="fa-user-secret" class="text-2xl text-blue-400" />
           </div>
 
@@ -19,10 +17,8 @@
       </nuxt-link>
 
       <nuxt-link to="/categories/add">
-        <div class="flex items-start rounded-xl bg-white p-4 shadow-lg">
-          <div
-            class="flex h-12 w-12 items-center justify-center rounded-full border border-orange-100 bg-orange-50"
-          >
+        <div class="home-control-btn">
+          <div class="home-control-btn-icon border-orange-100 bg-orange-50">
             <Icon name="fa-user-secret" class="text-2xl text-orange-400" />
           </div>
 
@@ -33,16 +29,40 @@
         </div>
       </nuxt-link>
     </div>
+
+    <!-- Recently Added Items  -->
+    <div v-if="items.length > 0" class="mt-5">
+      <h1 class="text-xl mb-2">Recently Added Items...</h1>
+      <div class="grid grid-cols-4 gap-5">
+        <div v-for="i in items">
+          <ItemCard :item="i" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Recently Added Categories  -->
+    <div v-if="categories.length > 0" class="mt-5">
+      <h1 class="text-xl mb-2">Recently Added Categories...</h1>
+      <div class="grid grid-cols-4 gap-5">
+        <div v-for="i in categories">
+          <CategoryCard :category="i" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
 import { useItemStore } from "~/stores/ItemStore";
+import { useCategoryStore } from "~/stores/CategoryStore";
+
 const itemStore = useItemStore();
+await itemStore.retrieveItems();
 
-// Accessing getters and state
-const { items } = storeToRefs(itemStore);
+const categoryStore = useCategoryStore();
+await categoryStore.retrieveCategories();
 
-// await itemStore.initAuth();
+const { recentItems: items } = storeToRefs(itemStore);
+const { recentCategories: categories } = storeToRefs(categoryStore);
 </script>
