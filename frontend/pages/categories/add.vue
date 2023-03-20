@@ -124,7 +124,7 @@
     </div>
 
     <!-- Form Buttons -->
-    <div class="lex justify-end mx-auto">
+    <div class="flex justify-end mx-auto">
       <button
         class="btn-create font-bold mr-2"
         @click.prevent="submitCategoryForm"

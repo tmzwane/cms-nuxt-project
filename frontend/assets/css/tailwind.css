@@ -65,7 +65,7 @@ body {
   }
 
   .home-control-btn {
-    @apply flex items-start rounded-xl bg-white p-4 shadow-lg;
+    @apply flex items-start rounded-xl p-4 shadow-lg;
   }
   .home-control-btn:hover {
     @apply flex items-start rounded-xl bg-slate-300 p-4 shadow-sm;

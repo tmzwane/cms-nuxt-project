@@ -1,0 +1,34 @@
+version: "3.1"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: assessment-db
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+  backend:
+    container_name: assessment-backend
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    environment:
+      - MONGO_URI="mongodb://mongodb:27017/basebone"
+    depends_on:
+      - mongodb
+  frontend:
+    container_name: assessment-frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      - VUE_APP_KINGDOM_CREDENTIALS_API=${KINGDOM_DEV_CREDENTIALS_API}
+      - VUE_APP_KINGDOM_SUBJECT_API=${KINGDOM_DEV_SUBJECT_API}
+    depends_on:
+      - backend
