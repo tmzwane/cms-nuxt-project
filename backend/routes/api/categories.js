@@ -55,17 +55,18 @@ router.post("/", async (req, res) => {
   const payload = req.body;
   const errors = { success: false };
 
+  // Create a local first for the category
   const locale = await addNewLocale(payload);
 
   if (!locale.success) {
     return res.status(locale.status_code).json(locale);
   }
 
+  // Prepare new Category
   const newCategory = new Category({
+    locale: locale.data._id,
     path: payload.path,
   });
-
-  newCategory.locale = locale.data._id;
 
   // Generate slug from title, and limit only to 7 words
   const slugPrefix = payload.title.toLowerCase().split(" ").slice(0, 7);
@@ -121,57 +122,84 @@ router.post("/", async (req, res) => {
  * @route   PUT api/categories/:category_id
  * @desc    Update a category using Id
  * @access  Public
+ * @params  category_id
  */
-router.put("/", (req, res) => {
+router.put("/:category_id", async (req, res) => {
   const categoryId = req.params.category_id;
   const payload = req.body;
   const errors = { success: false };
 
-  Category.findById(categoryId).then((category) => {
-    if (!category) {
-      errors.message = "Category doesn't exist";
-      return res.status(404).json(errors);
+  const category = await Category.findById(categoryId);
+
+  if (isEmpty(category)) {
+    errors.message = "Category doesn't exist";
+    return res.status(404).json(errors);
+  }
+
+  // Create a local first for the category
+  const localUpdate = await updateLocale(category.locale, payload);
+
+  if (!localUpdate.success) {
+    return res.status(localUpdate.status_code).json(localUpdate);
+  }
+
+  // Prepare category update
+  const toUpdate = {};
+
+  // Update slug if title has changed
+  let slug;
+  if (category.locale.title !== payload.title) {
+    const slugPrefix = payload.title.toLowerCase().split(" ").slice(0, 7);
+    const slugId = slugIdGenerator();
+    slug = slugPrefix.join("-") + `-${slugId}`;
+  } else {
+    slug = category.slug;
+  }
+
+  toUpdate.slug = slug;
+  toUpdate.path = payload.path || category.path;
+  toUpdate.locale = payload.locale || category.locale;
+
+  // Validate Parent ID and update ancestors
+  if (!isEmpty(payload.parent_id)) {
+    const parentCategory = await Category.findById(payload.parent_id);
+    if (!isEmpty(parentCategory)) {
+      toUpdate.parent_id = parentCategory._id;
+      toUpdate.ancestor_ids = [];
+      // If parent has a parent, then make that an ancestor of the child
+      if (!isEmpty(parentCategory.parent_id)) {
+        toUpdate.ancestor_ids.push(parentCategory.parent_id);
+        // If parent has ancestors, then include them to the child's ancestry
+        if (!isEmpty(parentCategory.ancestor_ids)) {
+          toUpdate.ancestor_ids.push(...parentCategory.ancestor_ids);
+        }
+      }
     }
+  }
 
-    // TODO: Check if the new slug and path don't already exist
-    // TODO: Validate Parent and Ancestor IDs
-    // TODO: Validate Locale
-
-    const categoryUpdate = {};
-    categoryUpdate.slug = payload.slug || category.slug;
-    categoryUpdate.path = payload.path || category.path;
-    categoryUpdate.parent_id = payload.parent_id || category.parent_id;
-    categoryUpdate.locale = payload.locale || category.locale;
-
-    if (payload.ancestor_ids.length > 0) {
-      categoryUpdate.ancestor_ids =
-        payload.ancestor_ids || category.ancestor_ids;
-    }
-
-    Category.findByIdAndUpdate(
+  try {
+    const categoryUpdate = await Category.findByIdAndUpdate(
       categoryId,
-      { $set: categoryUpdate },
-      { new: true }
-    )
-      .then((category) => {
-        res.json({
-          success: true,
-          data: category,
-          message: "Category updated",
-        });
-      })
-      .catch((errorDetails) => {
-        errors.message = "Request failed";
-        errors.details = errorDetails;
-        res.status(500).json({ errors });
-      });
-  });
+      toUpdate
+    );
+
+    return res.json({
+      success: true,
+      data: categoryUpdate,
+      message: "Category updated",
+    });
+  } catch (errorDetails) {
+    errors.message = "Request failed";
+    errors.details = errorDetails;
+    return res.status(500).json({ errors });
+  }
 });
 
 /*
  * @route   DELETE api/categories/:category_id
  * @desc    Remove category using Id
  * @access  Public
+ * @params  category_id
  */
 router.delete("/:category_id", (req, res) => {
   const categoryId = req.params.category_id;

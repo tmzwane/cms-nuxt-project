@@ -61,11 +61,7 @@ export async function updateLocale(localeId, payload) {
     toUpdate.seo_summary = payload.seo_summary || locale.seo_summary;
     toUpdate.use_seo_values = payload.use_seo_values || locale.use_seo_values;
 
-    const updatedLocale = await Locale.findByIdAndUpdate(
-      localeId,
-      { $set: toUpdate },
-      { new: true }
-    );
+    const updatedLocale = await Locale.findByIdAndUpdate(localeId, toUpdate);
 
     return {
       success: true,

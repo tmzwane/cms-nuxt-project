@@ -22,3 +22,29 @@ export const noConnection = {
   status_code: 503,
   description: "Couldn't connect to the requested backend.",
 };
+
+export function backendErrorParser(errorDetails) {
+  if (Object.keys(errorDetails).length < 1) {
+    errorDetails = noConnection;
+  }
+
+  let responseStatus;
+  let responseMessage;
+
+  if ("response" in errorDetails) {
+    responseStatus = errorDetails.response.status;
+    if ("data" in errorDetails.response) {
+      const { data } = errorDetails.response;
+      responseMessage = data.message || errorDetails.message;
+    } else {
+      responseMessage =
+        errorDetails.error || errorDetails.message || errorDetails.description;
+    }
+  }
+
+  throw createError({
+    statusCode: responseStatus,
+    statusMessage: responseMessage,
+    fatal: true,
+  });
+}

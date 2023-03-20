@@ -47,6 +47,7 @@ export const useItemStore = defineStore("itemStore", {
         throw createError({
           statusCode: errorDetails.status_code,
           statusMessage: errorMessage,
+          fatal: true,
         });
       }
       this.serverRequestLoading = false;
@@ -69,6 +70,7 @@ export const useItemStore = defineStore("itemStore", {
         throw createError({
           statusCode: errorDetails.status_code,
           statusMessage: errorMessage,
+          fatal: true,
         });
       }
       this.serverRequestLoading = false;

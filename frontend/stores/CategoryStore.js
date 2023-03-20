@@ -1,4 +1,4 @@
-import axios, { noConnection } from "../config/apiConfig";
+import axios, { backendErrorParser } from "../config/apiConfig";
 import { defineStore } from "pinia";
 
 export const useCategoryStore = defineStore("categoryStore", {
@@ -27,48 +27,27 @@ export const useCategoryStore = defineStore("categoryStore", {
   },
   actions: {
     async retrieveCategories() {
-      this.serverRequestLoading = true;
       try {
         const { data: response } = await axios.get(`/categories`);
         this.categories = response.data || [];
       } catch (errorDetails) {
-        if (Object.keys(errorDetails).length < 1) {
-          errorDetails = noConnection;
-        }
-        this.hasError = true;
-        this.error = errorDetails;
-        const errorMessage =
-          errorDetails.error ||
-          errorDetails.message ||
-          errorDetails.description;
-        throw createError({
-          statusCode: errorDetails.status_code,
-          statusMessage: errorMessage,
-        });
+        backendErrorParser(errorDetails);
       }
-      this.serverRequestLoading = false;
     },
     async createCategory(payload) {
-      this.serverRequestLoading = true;
       try {
         const { data: response } = await axios.post(`/categories`, payload);
         this.categories.push(response.data);
       } catch (errorDetails) {
-        if (Object.keys(errorDetails).length < 1) {
-          errorDetails = noConnection;
-        }
-        this.hasError = true;
-        this.error = errorDetails;
-        const errorMessage =
-          errorDetails.error ||
-          errorDetails.message ||
-          errorDetails.description;
-        throw createError({
-          statusCode: errorDetails.status_code,
-          statusMessage: errorMessage,
-        });
+        backendErrorParser(errorDetails);
       }
-      this.serverRequestLoading = false;
+    },
+    async updateCategory(payload) {
+      try {
+        await axios.put(`/categories/${payload.id}`, payload);
+      } catch (errorDetails) {
+        backendErrorParser(errorDetails);
+      }
     },
   },
 });
