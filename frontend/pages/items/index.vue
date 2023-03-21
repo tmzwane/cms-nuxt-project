@@ -17,4 +17,14 @@ await itemStore.retrieveItems();
 
 // Accessing getters and state
 const { allItems } = storeToRefs(itemStore);
+
+useHead({
+  title: "Assessment | Items",
+  meta: [
+    {
+      name: "description",
+      content: "View all assessment items",
+    },
+  ],
+});
 </script>

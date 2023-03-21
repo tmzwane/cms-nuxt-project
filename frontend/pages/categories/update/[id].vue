@@ -156,6 +156,16 @@ const router = useRouter();
 const categoryStore = useCategoryStore();
 const { isEmpty } = useUtilities();
 
+useHead({
+  title: "Assessment | Update Category",
+  meta: [
+    {
+      name: "description",
+      content: "Update category",
+    },
+  ],
+});
+
 // Modal Controller
 const showConfirmation = ref(false);
 

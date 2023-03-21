@@ -1,5 +1,9 @@
 <template>
   <div>
+    <Head>
+      <Title>Assessment | {{ category.locale.title }}</Title>
+      <Meta name="description" :content="category.locale.summary" />
+    </Head>
     <CategoryDetails :category="category" />
   </div>
 </template>

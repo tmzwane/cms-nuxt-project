@@ -295,6 +295,16 @@ const itemStore = useItemStore();
 const categoryStore = useCategoryStore();
 const { isEmpty, truncateWords } = useUtilities();
 
+useHead({
+  title: "Assessment | Add Item",
+  meta: [
+    {
+      name: "description",
+      content: "Add a new item",
+    },
+  ],
+});
+
 // Modal Controller
 const showConfirmation = ref(false);
 

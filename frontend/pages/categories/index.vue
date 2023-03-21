@@ -15,4 +15,14 @@ await categoryStore.retrieveCategories();
 
 // Accessing getters and state
 const { allCategories } = storeToRefs(categoryStore);
+
+useHead({
+  title: "Assessment | Categories",
+  meta: [
+    {
+      name: "description",
+      content: "View all assessment categories",
+    },
+  ],
+});
 </script>

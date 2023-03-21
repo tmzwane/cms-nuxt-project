@@ -255,6 +255,16 @@ const itemStore = useItemStore();
 const categoryStore = useCategoryStore();
 const { isEmpty } = useUtilities();
 
+useHead({
+  title: "Assessment | Update Item",
+  meta: [
+    {
+      name: "description",
+      content: "Update item",
+    },
+  ],
+});
+
 // Modal Controller
 const showConfirmation = ref(false);
 

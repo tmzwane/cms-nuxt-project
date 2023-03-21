@@ -1,5 +1,9 @@
 <template>
   <div>
+    <Head>
+      <Title>Assessment | {{ item.locale.title }}</Title>
+      <Meta name="description" :content="item.locale.summary" />
+    </Head>
     <ItemDetails :item="item" />
   </div>
 </template>

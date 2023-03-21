@@ -193,6 +193,16 @@ const router = useRouter();
 const categoryStore = useCategoryStore();
 const { isEmpty, truncateWords } = useUtilities();
 
+useHead({
+  title: "Assessment | Add Category",
+  meta: [
+    {
+      name: "description",
+      content: "Add a new category",
+    },
+  ],
+});
+
 // Modal Controller
 const showConfirmation = ref(false);
 
