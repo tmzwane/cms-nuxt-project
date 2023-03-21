@@ -1,9 +1,6 @@
 <template>
   <div class="card text-center bg-orange-200 rounded-lg p-4">
-    <Icon
-      name="line-md:clipboard-check-twotone"
-      class="text-5xl text-orange-400"
-    />
+    <Icon name="jam:sitemap-f" class="text-5xl text-orange-400" />
     <p class="font-bold text-orange-500 truncate m-4">
       {{ category.locale.title }}
     </p>

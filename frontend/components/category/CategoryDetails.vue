@@ -2,7 +2,7 @@
   <div class="card">
     <div class="grid grid-cols-2 gap-2">
       <div class="p-7 text-center">
-        <Icon name="fa-user-secret" class="text-9xl mx-auto my-7" />
+        <Icon name="jam:sitemap-f" class="text-9xl mx-auto my-7" />
       </div>
       <div class="p-7">
         <h2 class="text-4xl my-7">{{ category.locale.title }}</h2>

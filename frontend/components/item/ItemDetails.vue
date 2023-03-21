@@ -2,7 +2,10 @@
   <div class="card">
     <div class="grid grid-cols-2 gap-2">
       <div class="p-7 text-center">
-        <Icon name="fa-user-secret" class="text-9xl mx-auto my-7" />
+        <Icon
+          name="icon-park-outline:adjacent-item"
+          class="text-9xl mx-auto my-7"
+        />
       </div>
       <div class="p-7">
         <h2 class="text-4xl my-7">{{ item.locale.title }}</h2>
@@ -32,7 +35,9 @@
       </template>
       <!-- Modal Footer -->
       <template #footer>
-        <button class="btn-outline" @click="router.push('/')">No</button>
+        <button class="btn-outline" @click="showConfirmation = false">
+          No
+        </button>
         <button class="btn-delete ml-2" @click="deleteItem">Yes</button>
       </template>
     </CommonConfirmationModal>
@@ -52,5 +57,6 @@ const showConfirmation = ref(false);
 async function deleteItem() {
   await itemStore.deleteItem(item._id);
   showConfirmation.value = false;
+  router.go(-1);
 }
 </script>
