@@ -27,7 +27,10 @@
     </div>
 
     <!-- Confirmation Modal -->
-    <CommonConfirmationModal :show-confirmation="showConfirmation">
+    <CommonConfirmationModal
+      :show-confirmation="showConfirmation"
+      @cancelled="showConfirmation = false"
+    >
       <!-- Modal Header -->
       <template #header>
         <h3 class="text-2xl font-semibold">Delete Item?</h3>

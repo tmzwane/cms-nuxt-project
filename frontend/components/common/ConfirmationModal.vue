@@ -4,11 +4,11 @@
       <div class="flex flex-col max-w-5xl rounded-lg shadow-lg bg-white">
         <!-- Header -->
         <div class="p-5">
-          <div class="flex justfiy-between items-start">
+          <div class="flex justify-between items-start">
             <slot name="header"></slot>
             <button class="p-1 leading-none" @click="onCancel">
-              <div class="text-xl font-semibold h-6 w-6">
-                <span>x</span>
+              <div class="text-2xl font-semibold h-6 w-6">
+                <span class="text-red-400 hover:text-red-900">x</span>
               </div>
             </button>
           </div>
