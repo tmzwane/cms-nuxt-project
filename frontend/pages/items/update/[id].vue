@@ -2,7 +2,9 @@
   <div class="pt-6 px-4 max-w-4xl">
     <!-- Title -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-title"> Title </label>
       <input
+        id="item-title"
         v-model="title"
         type="text"
         class="form-control form-fields"
@@ -12,7 +14,9 @@
 
     <!-- Source -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-url"> Source URL </label>
       <input
+        id="item-url"
         v-model="src"
         type="text"
         class="form-control form-fields"
@@ -22,7 +26,9 @@
 
     <!-- Extension -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-extension"> Extension </label>
       <input
+        id="item-extension"
         v-model="extension"
         type="text"
         class="form-control form-fields"
@@ -32,7 +38,9 @@
 
     <!-- Creator -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-creator"> Creator </label>
       <input
+        id="item-creator"
         v-model="creator"
         type="text"
         class="form-control form-fields"
@@ -43,7 +51,8 @@
     <!-- Type -->
     <div class="">
       <div class="form-group mb-6">
-        <select v-model="type" class="form-control form-fields">
+        <label class="form-label" for="item-type"> Type </label>
+        <select id="item-type" v-model="type" class="form-control form-fields">
           <option value="" selected disabled>Choose Item Type</option>
           <option v-for="(item, idx) of itemTypes" :value="item" :key="idx">
             {{ item }}
@@ -55,7 +64,12 @@
     <!-- Quality -->
     <div class="">
       <div class="form-group mb-6">
-        <select v-model="quality" class="form-control form-fields">
+        <label class="form-label" for="item-quality"> Quality </label>
+        <select
+          id="item-quality"
+          v-model="quality"
+          class="form-control form-fields"
+        >
           <option value="" selected disabled>Choose Item Quality</option>
           <option
             v-for="(quality, idx) of itemQualities"
@@ -70,7 +84,9 @@
 
     <!-- Size -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-size"> Size </label>
       <input
+        id="item-size"
         v-model="size"
         type="text"
         class="form-control form-fields"
@@ -81,7 +97,12 @@
     <!-- Size Unit -->
     <div class="">
       <div class="form-group mb-6">
-        <select v-model="sizeUnit" class="form-control form-fields">
+        <label class="form-label" for="item-size-unit"> Size Unit </label>
+        <select
+          id="item-size-unit"
+          v-model="sizeUnit"
+          class="form-control form-fields"
+        >
           <option value="" selected disabled>Choose Item Size Unit</option>
           <option
             v-for="(sizeUnit, idx) of sizeUnits"
@@ -97,8 +118,14 @@
     <!-- Category -->
     <div v-if="allCategories.length > 0" class="">
       <div class="form-group mb-6">
-        <select v-model="categories" class="form-control form-fields" multiple>
-          <option value="" selected disabled>Choose Item Category</option>
+        <label class="form-label" for="item-category"> Categories </label>
+        <select
+          id="item-category"
+          v-model="categories"
+          class="form-control form-fields"
+          multiple
+        >
+          <option value="" selected disabled>Choose Item Categories</option>
           <option
             v-for="(category, idx) of allCategories"
             :value="category._id"
@@ -112,7 +139,9 @@
 
     <!-- Description -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-description"> Description </label>
       <textarea
+        id="item-description"
         v-model="description"
         rows="4"
         placeholder="Item description here..."
@@ -122,7 +151,9 @@
 
     <!-- Summary -->
     <div class="form-group mb-6">
+      <label class="form-label" for="item-summary"> Summary </label>
       <textarea
+        id="item-summary"
         v-model="summary"
         rows="3"
         placeholder="Item summary here..."
@@ -132,7 +163,9 @@
 
     <!-- SEO Title -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-title"> SEO Title </label>
       <input
+        id="seo-title"
         v-model="seoTitle"
         type="text"
         class="form-control form-fields"
@@ -142,7 +175,9 @@
 
     <!-- SEO Description -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-description"> SEO Description </label>
       <textarea
+        id="seo-description"
         v-model="seoDescription"
         rows="4"
         placeholder="Item SEO description here..."
@@ -150,9 +185,11 @@
       ></textarea>
     </div>
 
-    <!-- SEO Description -->
+    <!-- SEO Summary -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-summary"> SEO Summary </label>
       <textarea
+        id="seo-summary"
         v-model="seoSummary"
         rows="4"
         placeholder="Item SEO summary here..."

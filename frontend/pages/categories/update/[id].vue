@@ -2,7 +2,9 @@
   <div class="pt-6 px-4 max-w-4xl">
     <!-- Title -->
     <div class="form-group mb-6">
+      <label class="form-label" for="category-title"> Title </label>
       <input
+        id="category-title"
         v-model="title"
         type="text"
         class="form-control form-fields"
@@ -12,7 +14,9 @@
 
     <!-- Path -->
     <div class="form-group mb-6">
+      <label class="form-label" for="category-path"> Path </label>
       <input
+        id="category-path"
         v-model="path"
         type="text"
         class="form-control form-fields"
@@ -38,7 +42,9 @@
 
     <!-- Description -->
     <div class="form-group mb-6">
+      <label class="form-label" for="category-description"> Description </label>
       <textarea
+        id="category-description"
         v-model="description"
         rows="4"
         placeholder="Category description here..."
@@ -48,7 +54,9 @@
 
     <!-- Summary -->
     <div class="form-group mb-6">
+      <label class="form-label" for="category-summary"> Summary </label>
       <textarea
+        id="category-summary"
         v-model="summary"
         rows="3"
         placeholder="Category summary here..."
@@ -58,7 +66,9 @@
 
     <!-- SEO Title -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-title"> SEO Title </label>
       <input
+        id="seo-title"
         v-model="seoTitle"
         type="text"
         class="form-control form-fields"
@@ -68,7 +78,9 @@
 
     <!-- SEO Description -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-description"> SEO Description </label>
       <textarea
+        id="seo-description"
         v-model="seoDescription"
         rows="4"
         placeholder="Category SEO description here..."
@@ -78,7 +90,9 @@
 
     <!-- SEO Description -->
     <div class="form-group mb-6">
+      <label class="form-label" for="seo-summary"> SEO Summary </label>
       <textarea
+        id="seo-summary"
         v-model="seoSummary"
         rows="4"
         placeholder="Category SEO summary here..."
