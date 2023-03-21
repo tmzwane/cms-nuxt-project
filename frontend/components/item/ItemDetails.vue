@@ -32,7 +32,7 @@
       </template>
       <!-- Modal Footer -->
       <template #footer>
-        <button class="btn-outline" @click="router.to('/')">No</button>
+        <button class="btn-outline" @click="router.push('/')">No</button>
         <button class="btn-delete ml-2" @click="deleteItem">Yes</button>
       </template>
     </CommonConfirmationModal>

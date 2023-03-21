@@ -181,6 +181,25 @@
         Cancel
       </nuxt-link>
     </div>
+
+    <!-- Confirmation Modal -->
+    <CommonConfirmationModal :show-confirmation="showConfirmation">
+      <!-- Modal Header -->
+      <template #header>
+        <h3 class="text-2xl font-semibold">Category Updated</h3>
+      </template>
+      <!-- Modal Body/Content -->
+      <template #content>
+        <p>Update was successful, do you want to return back?</p>
+      </template>
+      <!-- Modal Footer -->
+      <template #footer>
+        <button class="btn-outline" @click="router.push('/')">
+          Go Home...
+        </button>
+        <button class="btn ml-2" @click="router.go(-1)">Done</button>
+      </template>
+    </CommonConfirmationModal>
   </div>
 </template>
 
@@ -191,9 +210,13 @@ import { useItemStore } from "~/stores/ItemStore";
 import { useCategoryStore } from "~/stores/CategoryStore";
 import { useUtilities } from "~/utils/utilities";
 
+const router = useRouter();
 const itemStore = useItemStore();
 const categoryStore = useCategoryStore();
 const { isEmpty } = useUtilities();
+
+// Modal Controller
+const showConfirmation = ref(false);
 
 // Accessing store getters
 const { allItems, itemTypes, itemQualities, sizeUnits } =
@@ -236,7 +259,7 @@ const seoSummary = ref(activeItem.locale.seo_summary);
 
 const useSEOValues = ref(activeItem.locale.use_seo_values);
 
-function submitUpdateItemForm() {
+async function submitUpdateItemForm() {
   const payload = {
     title: title.value,
     src: src.value,
@@ -256,6 +279,7 @@ function submitUpdateItemForm() {
     use_seo_values: useSEOValues.value,
   };
 
-  itemStore.updateItem(payload);
+  await itemStore.updateItem(payload);
+  showConfirmation.value = true;
 }
 </script>

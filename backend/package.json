@@ -6,9 +6,13 @@
   "type": "module",
   "scripts": {
     "start": "node dev-server.js",
+    "backend": "nodemon dev-server.js",
     "dev": "nodemon dev-server.js",
     "lint": "eslint --ignore-path ../.gitignore .",
-    "lint-fix": "eslint --ignore-path ../.gitignore . --fix"
+    "lint-fix": "eslint --ignore-path ../.gitignore . --fix",
+    "frontend-install": "npm install --prefix ../frontend",
+    "frontend": "npm run dev --prefix ../frontend",
+    "all": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "author": "Thabang Zwane <tmzwane1@gmail.com>",
   "license": "ISC",

@@ -135,6 +135,27 @@
         Cancel
       </nuxt-link>
     </div>
+
+    <!-- Confirmation Modal -->
+    <CommonConfirmationModal :show-confirmation="showConfirmation">
+      <!-- Modal Header -->
+      <template #header>
+        <h3 class="text-2xl font-semibold">Action Successful</h3>
+      </template>
+      <!-- Modal Body/Content -->
+      <template #content>
+        <p>Category added successfully</p>
+      </template>
+      <!-- Modal Footer -->
+      <template #footer>
+        <button class="btn-outline" @click="router.push('/')">
+          Go Home...
+        </button>
+        <button class="btn ml-2" @click="router.push('/categories')">
+          Done
+        </button>
+      </template>
+    </CommonConfirmationModal>
   </div>
 </template>
 
@@ -144,8 +165,12 @@ import { storeToRefs } from "pinia";
 import { useCategoryStore } from "~/stores/CategoryStore";
 import { useUtilities } from "~/utils/utilities";
 
+const router = useRouter();
 const categoryStore = useCategoryStore();
 const { isEmpty, truncateWords } = useUtilities();
+
+// Modal Controller
+const showConfirmation = ref(false);
 
 // Accessing getters and state
 const { allCategories, loading } = storeToRefs(categoryStore);
@@ -167,7 +192,7 @@ const seoSummary = ref("");
 
 const useSEOValues = ref(true);
 
-function submitCategoryForm() {
+async function submitCategoryForm() {
   if (autoSummary.value && isEmpty(summary.value)) {
     // Limit summary to default 20 words
     summary.value = truncateWords(description.value);
@@ -199,6 +224,7 @@ function submitCategoryForm() {
     use_seo_values: useSEOValues.value,
   };
 
-  categoryStore.createCategory(payload);
+  await categoryStore.createCategory(payload);
+  showConfirmation.value = true;
 }
 </script>

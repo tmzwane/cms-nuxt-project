@@ -96,7 +96,7 @@
     </div>
 
     <!-- Form Buttons -->
-    <div class="lex justify-end mx-auto">
+    <div class="flex justify-end mx-auto">
       <button
         class="btn-update font-bold mr-2"
         @click.prevent="submitCategoryUpdateForm"
@@ -116,11 +116,13 @@
       </template>
       <!-- Modal Body/Content -->
       <template #content>
-        <p>Update was successful, do you want to to return back</p>
+        <p>Update was successful, do you want to return back?</p>
       </template>
       <!-- Modal Footer -->
       <template #footer>
-        <button class="btn-outline" @click="router.to('/')">Go Home...</button>
+        <button class="btn-outline" @click="router.push('/')">
+          Go Home...
+        </button>
         <button class="btn ml-2" @click="router.go(-1)">Done</button>
       </template>
     </CommonConfirmationModal>
@@ -137,6 +139,7 @@ const router = useRouter();
 const categoryStore = useCategoryStore();
 const { isEmpty } = useUtilities();
 
+// Modal Controller
 const showConfirmation = ref(false);
 
 // Accessing getters and state

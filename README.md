@@ -2,26 +2,28 @@
 
 ## Best Start
 
-Use docker to run the all the apps in one go. I've prepared a makefile that works wonders on MacOS and Linux, but it doesn't run on Windows, but basically with one make command you can tricker a chain of commands that would otherwise be a hassle to type one by one on the CLI.
+Use docker to run all the apps in one go and in an isolated environment.
+
+I've prepared a makefile that works wonders on MacOS and Linux, but it doesn't run on Windows, but basically with one make command you can tricker a chain of commands that would otherwise be a hassle to type one by one on the CLI.
 
 1. Makefile Commands
 
-To run everything all at once in an isolated docker environment and network using `docker-compose` run:
+To run everything all at once in an isolated docker environment using `docker-compose`, run:
 
 ```
 make compose-local
 ```
 
-To run mongodb database on docker run:
+To run mongodb only, on docker run:
 
 ```
 make run-mongo
 ```
 
-To clean up after using docker run:
+To clean up after using docker, run:
 
 ```
-docker-clean-up
+make docker-clean-up
 ```
 
 2. Using Concurrently

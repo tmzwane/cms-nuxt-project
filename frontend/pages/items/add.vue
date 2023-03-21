@@ -206,6 +206,25 @@
         Cancel
       </nuxt-link>
     </div>
+
+    <!-- Confirmation Modal -->
+    <CommonConfirmationModal :show-confirmation="showConfirmation">
+      <!-- Modal Header -->
+      <template #header>
+        <h3 class="text-2xl font-semibold">Action Successful</h3>
+      </template>
+      <!-- Modal Body/Content -->
+      <template #content>
+        <p>Item added successfully</p>
+      </template>
+      <!-- Modal Footer -->
+      <template #footer>
+        <button class="btn-outline" @click="router.push('/')">
+          Go Home...
+        </button>
+        <button class="btn ml-2" @click="router.push('/items')">Done</button>
+      </template>
+    </CommonConfirmationModal>
   </div>
 </template>
 
@@ -216,9 +235,13 @@ import { useItemStore } from "~/stores/ItemStore";
 import { useCategoryStore } from "~/stores/CategoryStore";
 import { useUtilities } from "~/utils/utilities";
 
+const router = useRouter();
 const itemStore = useItemStore();
 const categoryStore = useCategoryStore();
 const { isEmpty, truncateWords } = useUtilities();
+
+// Modal Controller
+const showConfirmation = ref(false);
 
 // Accessing store getters
 const { itemTypes, itemQualities, sizeUnits } = storeToRefs(itemStore);
@@ -247,7 +270,7 @@ const seoSummary = ref("");
 
 const useSEOValues = ref(true);
 
-function submitItemForm() {
+async function submitItemForm() {
   if (autoSummary.value && isEmpty(summary.value)) {
     // Limit summary to default 20 words
     summary.value = truncateWords(description.value);
@@ -286,6 +309,7 @@ function submitItemForm() {
     use_seo_values: useSEOValues.value,
   };
 
-  itemStore.createItem(payload);
+  await itemStore.createItem(payload);
+  showConfirmation.value = true;
 }
 </script>

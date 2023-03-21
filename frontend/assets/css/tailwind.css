@@ -56,6 +56,30 @@ body {
     @apply outline-none;
   }
 
+  .btn-item {
+    @apply bg-blue-500 text-blue-200 font-bold py-2 px-4 rounded;
+  }
+
+  .btn-item:hover {
+    @apply bg-blue-700;
+  }
+
+  .btn-item:focus {
+    @apply outline-none;
+  }
+
+  .btn-category {
+    @apply bg-orange-500 text-orange-200 font-bold py-2 px-4 rounded;
+  }
+
+  .btn-category:hover {
+    @apply bg-orange-700;
+  }
+
+  .btn-category:focus {
+    @apply outline-none;
+  }
+
   .btn-view-asset {
     @apply inline-block px-6 py-2 border-2 border-blue-400 text-blue-400 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out;
   }

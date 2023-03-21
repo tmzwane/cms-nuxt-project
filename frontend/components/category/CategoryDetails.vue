@@ -32,7 +32,9 @@
       </template>
       <!-- Modal Footer -->
       <template #footer>
-        <button class="btn-outline" @click="router.to('/')">No</button>
+        <button class="btn-outline" @click="showConfirmation = false">
+          No
+        </button>
         <button class="btn-delete ml-2" @click="deleteCategory">Yes</button>
       </template>
     </CommonConfirmationModal>
@@ -52,5 +54,6 @@ const showConfirmation = ref(false);
 async function deleteCategory() {
   await categoryStore.deleteCategory(category._id);
   showConfirmation.value = false;
+  router.go(-1);
 }
 </script>
